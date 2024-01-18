@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:todo_app_rest_api/service/todo_service.dart';
 
 class AddTodoPage extends StatefulWidget {
   const AddTodoPage({super.key});
@@ -38,7 +36,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
     );
   }
 
-  void submitdata() async {
+  Future<void> submitdata() async {
     final title = titleController.text;
     final description = descriptionController.text;
     final body = {
@@ -46,22 +44,14 @@ class _AddTodoPageState extends State<AddTodoPage> {
       "description": description,
       "is_completed": false,
     };
-    // http.get(Uri.parse('https://api.nstack.in/v1/todos'));
-    final url = 'https://api.nstack.in/v1/todos';
-    final uri = Uri.parse(url);
-    final responce = await http.post(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
 
-    if (responce.statusCode == 201) {
+    final responce = await TodoService.addData(body);
+    if (responce == 201) {
       showSuccessMessage('Creation Success');
       titleController.clear();
       descriptionController.clear();
     } else {
       showErrorMessage('Creation failed');
-      //  print(responce.body);
     }
   }
 

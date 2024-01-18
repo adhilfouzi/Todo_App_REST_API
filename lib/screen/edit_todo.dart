@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:todo_app_rest_api/service/todo_service.dart';
 
 class EditTodo extends StatefulWidget {
   final Map todo;
@@ -47,7 +45,7 @@ class _EditTodoState extends State<EditTodo> {
     );
   }
 
-  void updata() async {
+  Future<void> updata() async {
     final todo = widget.todo;
     final id = todo['_id'];
     final isdone = todo['is_completed'];
@@ -58,22 +56,13 @@ class _EditTodoState extends State<EditTodo> {
       "description": description,
       "is_completed": isdone,
     };
-    //  http.get(Uri.parse('https://api.nstack.in/v1/todos'));
-    final url = 'https://api.nstack.in/v1/todos/$id';
-    final uri = Uri.parse(url);
-    final responce = await http.put(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
-
-    if (responce.statusCode == 200 || responce.statusCode == 201) {
+    final responce = await TodoService.updatedata(id, body);
+    if (responce == 200 || responce == 201) {
       showSuccessMessage('Edit Success');
       titleController.clear();
       descriptionController.clear();
     } else {
-      showErrorMessage('Edit failed: ${responce.statusCode}');
-      print(responce.body);
+      showErrorMessage('Edit failed');
     }
   }
 

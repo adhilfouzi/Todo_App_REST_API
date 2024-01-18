@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:todo_app_rest_api/screen/add_todo.dart';
-import 'package:http/http.dart' as http;
 import 'package:todo_app_rest_api/screen/edit_todo.dart';
+import 'package:todo_app_rest_api/service/todo_service.dart';
 
 class TodoList extends StatefulWidget {
   const TodoList({super.key});
@@ -44,7 +43,7 @@ class _TodoListState extends State<TodoList> {
               style: Theme.of(context).textTheme.headlineSmall,
             )),
             child: ListView.builder(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final item = items[index] as Map;
@@ -108,16 +107,11 @@ class _TodoListState extends State<TodoList> {
 
   Future<void> deleteById(String id) async {
     log('Deleting item with id: $id');
-    final url = 'https://api.nstack.in/v1/todos/$id';
-    final uri = Uri.parse(url);
 
     try {
-      final response = await http.delete(
-        uri,
-        //headers: {'accept': 'application/json'},
-      );
+      final isDone = await TodoService.delectById(id);
 
-      if (response.statusCode == 200) {
+      if (isDone) {
         setState(() {
           items = items.where((element) => element['_id'] != id).toList();
         });
@@ -126,7 +120,7 @@ class _TodoListState extends State<TodoList> {
       } else {
         showErrorMessage('Error deleting item');
 
-        log('Error deleting item. Status code: ${response.statusCode}');
+        log('Error deleting item.');
       }
     } catch (error) {
       log('Error during deletion: $error');
@@ -150,17 +144,15 @@ class _TodoListState extends State<TodoList> {
   }
 
   Future<void> fetchTodo() async {
-    const url = 'https://api.nstack.in/v1/todos?page=1&limit=20';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
+    final response = await TodoService.fetchTodo();
 
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      final result = json['items'] as List;
+    if (response != null) {
       setState(() {
-        items = result;
+        items = response;
         log(items.toString());
       });
+    } else {
+      showErrorMessage('Something Missing');
     }
     setState(() {
       isloading = false;
