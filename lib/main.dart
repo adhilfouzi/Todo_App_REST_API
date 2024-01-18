@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app_rest_api/screen/todo_list.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
