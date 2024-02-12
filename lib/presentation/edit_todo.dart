@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app_rest_api/service/todo_service.dart';
+import 'package:todo_app_rest_api/data/repository/todo_reposiory.dart';
 
 class EditTodo extends StatefulWidget {
   final Map todo;
@@ -56,8 +56,8 @@ class _EditTodoState extends State<EditTodo> {
       "description": description,
       "is_completed": isdone,
     };
-    final responce = await TodoService.updatedata(id, body);
-    if (responce == 200 || responce == 201) {
+    final responce = await TodoRepository().updatedata(id, body);
+    if (responce) {
       showSuccessMessage('Edit Success');
       titleController.clear();
       descriptionController.clear();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app_rest_api/service/todo_service.dart';
+import 'package:todo_app_rest_api/data/repository/todo_reposiory.dart';
 
 class AddTodoPage extends StatefulWidget {
   const AddTodoPage({super.key});
@@ -45,8 +45,8 @@ class _AddTodoPageState extends State<AddTodoPage> {
       "is_completed": false,
     };
 
-    final responce = await TodoService.addData(body);
-    if (responce == 201) {
+    final responce = await TodoRepository().addData(body);
+    if (responce) {
       showSuccessMessage('Creation Success');
       titleController.clear();
       descriptionController.clear();

@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:todo_app_rest_api/screen/add_todo.dart';
-import 'package:todo_app_rest_api/screen/edit_todo.dart';
-import 'package:todo_app_rest_api/service/todo_service.dart';
+import 'package:todo_app_rest_api/data/repository/todo_reposiory.dart';
+import 'package:todo_app_rest_api/presentation/add_todo.dart';
+import 'package:todo_app_rest_api/presentation/edit_todo.dart';
 
 class TodoList extends StatefulWidget {
   const TodoList({super.key});
@@ -66,7 +66,7 @@ class _TodoListState extends State<TodoList> {
                         } else if (value == 'delete') {
                           log('Delete selected with ID: $id');
                           setState(() {
-                            deleteById(id);
+                            // deleteById(id);
                           });
                         } else {
                           log('error');
@@ -105,46 +105,51 @@ class _TodoListState extends State<TodoList> {
     );
   }
 
-  Future<void> deleteById(String id) async {
-    log('Deleting item with id: $id');
+// Future<void> deleteById(String id,currentContext) async {
+//   print('Deleting item with id: $id');
 
-    try {
-      final isDone = await TodoService.delectById(id);
+//   // Store the context in a local variable
 
-      if (isDone) {
-        setState(() {
-          items = items.where((element) => element['_id'] != id).toList();
-        });
-        showSuccessMessage('Deletion completed successfully');
-        log('Deletion completed successfully');
-      } else {
-        showErrorMessage('Error deleting item');
+//   try {
+//     final isDone = await TodoRepository().delectById(id);
 
-        log('Error deleting item.');
-      }
-    } catch (error) {
-      log('Error during deletion: $error');
-    }
-  }
+//     // Check if the widget is still mounted before proceeding
+//     if (!mounted) return;
 
-  void showSuccessMessage(String message) {
-    final snackBar = SnackBar(content: Text(message));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+//     if (isDone) {
+//       setState(() {
+//         items = items.where((element) => element['_id'] != id).toList();
+//       });
+//       SnackbarUtils.showSuccess(currentContext, 'Deletion completed successfully');
+//       print('Deletion completed successfully');
+//     } else {
+//       SnackbarUtils.showError(currentContext, 'Error deleting item');
+//       print('Error deleting item.');
+//     }
+//   } catch (error, stackTrace) {
+//     print('Error during deletion: $error');
+//     print(stackTrace); // Print stack trace for more details
+//   }
+// }
 
-  void showErrorMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(
-        message,
-        style: const TextStyle(color: Colors.white),
-      ),
-      backgroundColor: Colors.red,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  // void showSuccessMessage(String message) {
+  //   final snackBar = SnackBar(content: Text(message));
+  //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  // }
+
+  // void showErrorMessage(String message) {
+  //   final snackBar = SnackBar(
+  //     content: Text(
+  //       message,
+  //       style: const TextStyle(color: Colors.white),
+  //     ),
+  //     backgroundColor: Colors.red,
+  //   );
+  //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  // }
 
   Future<void> fetchTodo() async {
-    final response = await TodoService.fetchTodo();
+    final response = await TodoRepository().fetchTodo();
 
     if (response != null) {
       setState(() {
@@ -152,7 +157,7 @@ class _TodoListState extends State<TodoList> {
         log(items.toString());
       });
     } else {
-      showErrorMessage('Something Missing');
+      // showErrorMessage('Something Missing');
     }
     setState(() {
       isloading = false;
