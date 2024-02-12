@@ -5,8 +5,19 @@ sealed class TodoEvent {}
 
 final class GetTodoEvent extends TodoEvent {}
 
-final class AddTodoEvent extends TodoEvent {}
+final class AddTodoEvent extends TodoEvent {
+  final String title;
+  final String description;
+  AddTodoEvent({required this.title, required this.description});
+}
 
-final class UpdateTodoEvent extends TodoEvent {}
+class UpdateTodoEvent extends TodoEvent {
+  final String id;
+  final Map body;
+  UpdateTodoEvent(this.id, this.body);
+}
 
-final class DeleteTodoEvent extends TodoEvent {}
+class DeleteTodoEvent extends TodoEvent {
+  final String id;
+  DeleteTodoEvent(this.id);
+}

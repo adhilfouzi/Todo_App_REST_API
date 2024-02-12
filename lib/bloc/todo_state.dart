@@ -8,37 +8,32 @@ class TodoInitial extends TodoState {}
 class TodoLoadingState extends TodoState {}
 
 class TodoLoadedSuccess extends TodoState {
-  final List todo;
-
+  final List<dynamic> todo;
   TodoLoadedSuccess({required this.todo});
 }
 
 class TodoErrorState extends TodoState {
-  final String message;
-
-  TodoErrorState(this.message);
+  final String errorMessage;
+  TodoErrorState(this.errorMessage);
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 class TodoAddingState extends TodoState {}
 
-class TodoAddedState extends TodoState {}
+class TodoAddedSuccess extends TodoState {}
 
 class TodoAddErrorState extends TodoState {
   final String message;
 
   TodoAddErrorState(this.message);
 }
+
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-class TodoUpdatingState extends TodoState {
-  final String id;
-  final Map body;
-  TodoUpdatingState({required this.id, required this.body});
-}
+class TodoUpdatingState extends TodoState {}
 
-class TodoUpdatedState extends TodoState {}
+class TodoUpdatedSuccess extends TodoState {}
 
 class TodoUpdateErrorState extends TodoState {
   final String message;
