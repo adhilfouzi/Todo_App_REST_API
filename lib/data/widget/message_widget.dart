@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 
 class SnackbarUtils {
   static void showSuccess(BuildContext context, String message) {
-    final snackBar = SnackBar(content: Text(message));
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(color: Colors.black),
+      ),
+      backgroundColor: Colors.greenAccent,
+    );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -10,7 +16,7 @@ class SnackbarUtils {
     final snackBar = SnackBar(
       content: Text(
         message,
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.black),
       ),
       backgroundColor: Colors.red,
     );

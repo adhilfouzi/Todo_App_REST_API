@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app_rest_api/bloc/todo_bloc.dart';
 import 'package:todo_app_rest_api/bloc/todo_state.dart';
+import 'package:todo_app_rest_api/data/widget/message_widget.dart';
 import 'package:todo_app_rest_api/presentation/add_todo.dart';
 import 'package:todo_app_rest_api/presentation/edit_todo.dart';
 
@@ -16,29 +17,27 @@ class TodoList extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Todo List'),
+        title: const Text('Note Pad'),
       ),
       body: BlocConsumer<TodoBloc, TodoState>(
         listener: (context, state) {
           if (state is TodoErrorState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Error: ${state.errorMessage}'),
-                backgroundColor: Colors.red,
-              ),
-            );
+            SnackbarUtils.showError(context, 'Error: ${state.errorMessage}');
           }
         },
         builder: (context, state) {
           if (state is TodoErrorState) {
-            return Center(child: Text('Error: ${state.errorMessage}'));
+            return Center(
+                child: Text(
+              'Error: ${state.errorMessage}',
+            ));
           } else if (state is! TodoLoadedSuccess) {
             return const Center(child: CircularProgressIndicator());
           } else {
             final items = state.todo;
             if (items.isEmpty) {
               return const Center(
-                child: Text("No Todos found"),
+                child: Text("No Note found"),
               );
             }
             return ListView.builder(
@@ -51,8 +50,17 @@ class TodoList extends StatelessWidget {
                   leading: CircleAvatar(
                     child: Text('${index + 1}'),
                   ),
-                  title: Text(item['title']),
-                  subtitle: Text(item['description']),
+                  title: Text(
+                    item['title'],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(
+                    item['description'],
+                    maxLines: 2,
+                    textWidthBasis: TextWidthBasis.longestLine,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   trailing: PopupMenuButton(
                     onSelected: (value) async {
                       if (value == 'edit') {
@@ -88,7 +96,7 @@ class TodoList extends StatelessWidget {
             await Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const AddTodoPage()));
           },
-          label: const Text('Add Todo')),
+          label: const Text('Add Note')),
     );
   }
 }

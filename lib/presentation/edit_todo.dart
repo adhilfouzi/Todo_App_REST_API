@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app_rest_api/bloc/todo_bloc.dart';
 import 'package:todo_app_rest_api/bloc/todo_state.dart';
 import 'package:todo_app_rest_api/data/repository/todo_reposiory.dart';
+import 'package:todo_app_rest_api/data/widget/message_widget.dart';
 import 'package:todo_app_rest_api/presentation/todo_list.dart';
 
 class EditTodo extends StatefulWidget {
@@ -31,31 +32,48 @@ class _EditTodoState extends State<EditTodo> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text('Edit Todo'),
+          title: const Text('Edit Note'),
         ),
         body: BlocListener<TodoBloc, TodoState>(
           listener: (context, state) {
             if (state is TodoUpdatedSuccess) {
-              showSuccessMessage('Edit Success');
+              SnackbarUtils.showSuccess(context, 'Edit Success');
               titleController.clear();
               descriptionController.clear();
             } else if (state is TodoUpdateErrorState) {
-              showErrorMessage(state.message);
+              SnackbarUtils.showError(context, state.message);
             }
           },
           child: ListView(
             padding: const EdgeInsets.all(20),
             children: [
+              const SizedBox(
+                height: 20,
+              ),
               TextField(
+                minLines: 1,
+                maxLines: 2,
+                keyboardType: TextInputType.multiline,
                 controller: titleController,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(hintText: 'Title'),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+              ),
+              const SizedBox(
+                height: 20,
               ),
               TextField(
                 controller: descriptionController,
-                decoration: const InputDecoration(hintText: 'Description'),
+                textCapitalization: TextCapitalization.sentences,
+                decoration: const InputDecoration(
+                  hintText: 'Description',
+                ),
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 10,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -71,6 +89,7 @@ class _EditTodoState extends State<EditTodo> {
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => const TodoList()),
                       (route) => false);
+                  SnackbarUtils.showSuccess(context, 'Update Success');
                 },
                 child: const Text('Update'),
               )
@@ -79,22 +98,5 @@ class _EditTodoState extends State<EditTodo> {
         ),
       ),
     );
-  }
-
-  void showSuccessMessage(String message) {
-    final snackBar = SnackBar(content: Text(message));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    Navigator.of(context).pop(true);
-  }
-
-  void showErrorMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(
-        message,
-        style: const TextStyle(color: Colors.white),
-      ),
-      backgroundColor: Colors.red,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
