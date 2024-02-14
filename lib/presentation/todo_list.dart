@@ -52,12 +52,16 @@ class TodoList extends StatelessWidget {
                   ),
                   title: Text(
                     item['title'],
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w500, fontSize: 16),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   subtitle: Text(
                     item['description'],
                     maxLines: 2,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w300, fontSize: 13),
                     textWidthBasis: TextWidthBasis.longestLine,
                     overflow: TextOverflow.ellipsis,
                   ),
